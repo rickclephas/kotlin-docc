@@ -29,11 +29,11 @@ public abstract class DocCConvertTask @Inject constructor(
      * Indicates if an index should be created for the produced `.doccarchive`.
      */
     @get:Input
-    public abstract val createIndex: Property<Boolean>
+    public val createIndex: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
 
     override fun exec() {
         super.exec()
-        if (!createIndex.getOrElse(false)) return
+        if (!createIndex.get()) return
         execOperations.exec {
             it.executable = "/usr/bin/xcrun"
             it.args("docc", "process-archive", "index",
