@@ -10,7 +10,10 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 internal val Framework.taskSuffix: String
-    get() = "${name.capitalized()}${target.targetName.capitalized()}"
+    get() = "${name.capitalized()}${target.taskSuffix}"
+
+internal val KotlinNativeTarget.taskSuffix: String
+    get() = targetName.capitalized()
 
 internal val Framework.baseNameProvider: Provider<String>
     get() = project.provider { baseName.replace('-', '_') }

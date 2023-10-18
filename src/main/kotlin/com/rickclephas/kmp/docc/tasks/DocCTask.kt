@@ -15,7 +15,6 @@ import org.gradle.process.ExecOperations
 import org.gradle.work.DisableCachingByDefault
 import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.konan.target.HostManager
-import javax.annotation.OverridingMethodsMustInvokeSuper
 import javax.inject.Inject
 
 @DisableCachingByDefault
@@ -66,7 +65,6 @@ public abstract class DocCTask(
     public abstract val additionalArgs: ListProperty<String>
 
     @TaskAction
-    @OverridingMethodsMustInvokeSuper
     public open fun exec() {
         val baseName = baseName.get()
         execOperations.exec {

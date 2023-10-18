@@ -7,7 +7,6 @@ import org.gradle.api.file.FileSystemOperations
 import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.*
-import org.gradle.configurationcache.extensions.capitalized
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.konan.target.HostManager
@@ -24,7 +23,7 @@ internal abstract class CreateDocCSourceBundleTask @Inject constructor(
     internal companion object {
         fun locateOrRegister(target: KotlinNativeTarget): TaskProvider<CreateDocCSourceBundleTask> =
             target.project.tasks.locateOrRegister(
-                "createDoccSourceBundle${target.targetName.capitalized()}",
+                "createDoccSourceBundle${target.taskSuffix}",
                 CreateDocCSourceBundleTask::class.java,
                 target
             )
