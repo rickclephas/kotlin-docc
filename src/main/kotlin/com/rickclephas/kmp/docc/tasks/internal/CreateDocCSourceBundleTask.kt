@@ -1,8 +1,10 @@
 package com.rickclephas.kmp.docc.tasks.internal
 
+import org.gradle.api.DefaultTask
 import org.gradle.api.file.Directory
 import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.file.FileSystemOperations
+import org.gradle.api.file.FileTree
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.*
 import org.gradle.configurationcache.extensions.capitalized
@@ -16,7 +18,7 @@ import javax.inject.Inject
 internal abstract class CreateDocCSourceBundleTask @Inject constructor(
     @get:Internal
     val target: KotlinNativeTarget
-): SourceTask() {
+): DefaultTask() {
 
     internal companion object {
         fun locateOrRegister(target: KotlinNativeTarget): TaskProvider<CreateDocCSourceBundleTask> =
@@ -27,18 +29,24 @@ internal abstract class CreateDocCSourceBundleTask @Inject constructor(
             )
     }
 
-    init {
-        onlyIf { HostManager.hostIsMac }
-        target.compilations.getByName(KotlinCompilation.MAIN_COMPILATION_NAME).allKotlinSourceSets.forAll {
-            source(project.file("src/${it.name}/docc"))
-        }
-    }
+    private val sourceFiles = project.objects.fileCollection()
+
+    @get:InputFiles
+    @PathSensitive(PathSensitivity.ABSOLUTE)
+    val source: FileTree = sourceFiles.asFileTree
 
     @get:Inject
     abstract val fileSystemOperations: FileSystemOperations
 
     @get:OutputDirectory
     val outputDirectory: Provider<Directory> = target.sourceBundleDir
+
+    init {
+        onlyIf { HostManager.hostIsMac }
+        target.compilations.getByName(KotlinCompilation.MAIN_COMPILATION_NAME).allKotlinSourceSets.forAll {
+            sourceFiles.from("src/${it.name}/docc")
+        }
+    }
 
     @TaskAction
     fun action() {

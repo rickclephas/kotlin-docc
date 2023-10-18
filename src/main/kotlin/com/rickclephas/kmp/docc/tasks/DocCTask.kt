@@ -43,9 +43,7 @@ public abstract class DocCTask(
 
     @get:InputDirectory
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
-    public val sourceBundle: Provider<Directory> = framework.target.sourceBundleDir.map { dir ->
-        dir.also { it.asFile.mkdirs() }
-    }
+    public val sourceBundle: Provider<Directory> = framework.target.sourceBundleDir
 
     @get:InputDirectory
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
