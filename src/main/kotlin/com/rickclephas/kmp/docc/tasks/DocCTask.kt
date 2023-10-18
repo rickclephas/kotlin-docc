@@ -9,6 +9,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.file.Directory
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.*
 import org.gradle.process.ExecOperations
@@ -59,22 +60,43 @@ public abstract class DocCTask(
     public val outputDirectory: Provider<Directory> = framework.doccArchiveDir
 
     /**
+     * The display name passed to `--fallback-display-name`, defaults to the `baseName`.
+     */
+    @get:Input
+    public val displayName: Property<String> = project.objects.property(String::class.java)
+        .convention(baseName)
+
+    /**
+     * The bundle identifier passed to `--bundle-identifier` and `--fallback-bundle-identifier`,
+     * defaults to `${project.group}.$baseName`.
+     */
+    @get:Input
+    public val bundleIdentifier: Property<String> = project.objects.property(String::class.java)
+        .convention(baseName.flatMap { baseName -> projectGroup.map { "$it.$baseName" } })
+
+    /**
+     * The bundle version passed to `--fallback-bundle-version`, defaults to `${project.version}`.
+     */
+    @get:Input
+    public val bundleVersion: Property<String> = project.objects.property(String::class.java)
+        .convention(projectVersion)
+
+    /**
      * Additional DocC arguments that will be provided to the subcommand.
      */
     @get:Input
-    public abstract val additionalArgs: ListProperty<String>
+    public val additionalArgs: ListProperty<String> = project.objects.listProperty(String::class.java)
 
     @TaskAction
     public open fun exec() {
-        val baseName = baseName.get()
         execOperations.exec {
             it.executable = "/usr/bin/xcrun"
             it.args("docc", subcommand,
                 "--additional-symbol-graph-dir", symbolGraphDir.get().asFile.absolutePath,
                 "--output-path", outputDirectory.get().asFile.absolutePath,
-                "--fallback-display-name", baseName,
-                "--fallback-bundle-identifier", "${projectGroup.get()}.$baseName",
-                "--fallback-bundle-version", projectVersion.get(),
+                "--fallback-display-name", displayName.get(),
+                "--fallback-bundle-identifier", bundleIdentifier.get(),
+                "--fallback-bundle-version", bundleVersion.get(),
             )
             it.args(additionalArgs.get())
             it.args(sourceBundle.get().asFile.absolutePath)

@@ -26,7 +26,7 @@ public abstract class DocCConvertTask @Inject constructor(
     }
 
     /**
-     * Indicates if an index should be created for the produced `.doccarchive`.
+     * Indicates if an index should be created for the produced `.doccarchive`, defaults to `false`.
      */
     @get:Input
     public val createIndex: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
@@ -38,7 +38,7 @@ public abstract class DocCConvertTask @Inject constructor(
             it.executable = "/usr/bin/xcrun"
             it.args("docc", "process-archive", "index",
                 outputDirectory.get().asFile.absolutePath,
-                "--bundle-identifier", "${projectGroup.get()}.$baseName",
+                "--bundle-identifier", bundleIdentifier.get(),
             )
         }
     }
