@@ -13,7 +13,7 @@ internal val Framework.taskSuffix: String
     get() = "${name.capitalized()}${target.targetName.capitalized()}"
 
 internal val Framework.baseNameProvider: Provider<String>
-    get() = project.provider { baseName }
+    get() = project.provider { baseName.replace('-', '_') }
 
 internal val Framework.symbolGraphDir: Provider<Directory>
     get() = project.layout.buildDirectory.dir("docc/symbol-graphs/${target.targetName}/$name")
