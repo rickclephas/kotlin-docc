@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.rickclephas.kmp"
-version = "1.0-SNAPSHOT"
+version = "0.1.0"
 
 kotlin {
     explicitApi()
