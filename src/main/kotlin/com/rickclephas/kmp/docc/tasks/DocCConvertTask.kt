@@ -38,7 +38,7 @@ public abstract class DocCConvertTask @Inject constructor(
             it.executable = "/usr/bin/xcrun"
             it.args("docc", "process-archive", "index",
                 outputDirectory.get().asFile.absolutePath,
-                "--bundle-identifier", "${framework.project.group}.$baseName",
+                "--bundle-identifier", "${projectGroup.get()}.$baseName",
             )
         }
     }

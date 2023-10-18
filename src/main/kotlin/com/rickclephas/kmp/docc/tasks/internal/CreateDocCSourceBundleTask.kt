@@ -17,6 +17,7 @@ import javax.inject.Inject
 @Suppress("LeakingThis")
 internal abstract class CreateDocCSourceBundleTask @Inject constructor(
     @get:Internal
+    @Transient
     val target: KotlinNativeTarget
 ): DefaultTask() {
 

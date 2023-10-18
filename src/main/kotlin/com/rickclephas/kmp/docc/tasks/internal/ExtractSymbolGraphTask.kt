@@ -16,6 +16,7 @@ import javax.inject.Inject
 @Suppress("LeakingThis")
 internal abstract class ExtractSymbolGraphTask(
     @get:Internal
+    @Transient
     val framework: Framework,
     private val language: String,
 ): DefaultTask() {
@@ -24,6 +25,9 @@ internal abstract class ExtractSymbolGraphTask(
         onlyIf { HostManager.hostIsMac }
         dependsOn(framework.linkTaskProvider)
     }
+
+    @Internal
+    protected val konanTarget = framework.target.konanTarget
 
     @get:Inject
     @get:Internal
@@ -35,12 +39,11 @@ internal abstract class ExtractSymbolGraphTask(
     @get:InputDirectory
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
     val frameworkDir: Provider<Directory> = framework.linkTaskProvider.flatMap {
-        framework.project.layout.dir(it.outputFile)
+        project.layout.dir(it.outputFile)
     }
 
     @get:OutputDirectory
     val outputDirectory: Provider<Directory> = framework.symbolGraphDir.map { it.dir(language) }
-
 
     @TaskAction
     open fun extract() {
@@ -52,15 +55,15 @@ internal abstract class ExtractSymbolGraphTask(
 
     @Internal
     protected fun getSdkPath(): String {
-        val sdk = when (val target = framework.target.konanTarget) {
-            KonanTarget.IOS_ARM64, KonanTarget.IOS_ARM32 -> "iphoneos"
-            KonanTarget.IOS_SIMULATOR_ARM64, KonanTarget.IOS_X64 -> "iphonesimulator"
-            KonanTarget.WATCHOS_ARM32, KonanTarget.WATCHOS_ARM64, KonanTarget.WATCHOS_DEVICE_ARM64 -> "watchos"
-            KonanTarget.WATCHOS_X64, KonanTarget.WATCHOS_SIMULATOR_ARM64, KonanTarget.WATCHOS_X86  -> "watchsimulator"
-            KonanTarget.TVOS_ARM64 -> "appletvos"
-            KonanTarget.TVOS_X64, KonanTarget.TVOS_SIMULATOR_ARM64 -> "appletvsimulator"
-            KonanTarget.MACOS_X64, KonanTarget.MACOS_ARM64 -> "macosx"
-            else -> error("Unsupported target: ${target.name}")
+        val sdk = when (konanTarget) {
+            is KonanTarget.IOS_ARM64, is KonanTarget.IOS_ARM32 -> "iphoneos"
+            is KonanTarget.IOS_SIMULATOR_ARM64, is KonanTarget.IOS_X64 -> "iphonesimulator"
+            is KonanTarget.WATCHOS_ARM32, is KonanTarget.WATCHOS_ARM64, is KonanTarget.WATCHOS_DEVICE_ARM64 -> "watchos"
+            is KonanTarget.WATCHOS_X64, is KonanTarget.WATCHOS_SIMULATOR_ARM64, is KonanTarget.WATCHOS_X86  -> "watchsimulator"
+            is KonanTarget.TVOS_ARM64 -> "appletvos"
+            is KonanTarget.TVOS_X64, is KonanTarget.TVOS_SIMULATOR_ARM64 -> "appletvsimulator"
+            is KonanTarget.MACOS_X64, is KonanTarget.MACOS_ARM64 -> "macosx"
+            else -> error("Unsupported target: ${konanTarget.name}")
         }
         val sdkPathStream = ByteArrayOutputStream()
         execOperations.exec {

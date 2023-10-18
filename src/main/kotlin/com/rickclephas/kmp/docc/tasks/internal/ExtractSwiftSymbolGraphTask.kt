@@ -22,23 +22,23 @@ internal abstract class ExtractSwiftSymbolGraphTask @Inject constructor(
     override fun extract() {
         super.extract()
         val sdkPath = getSdkPath()
-        val target = when (val target = framework.target.konanTarget) {
-            KonanTarget.IOS_ARM64 -> "arm64-apple-ios"
-            KonanTarget.IOS_ARM32 -> "armv7-apple-ios"
-            KonanTarget.IOS_SIMULATOR_ARM64 -> "arm64-apple-ios-simulator"
-            KonanTarget.IOS_X64 -> "x86_64-apple-ios-simulator"
-            KonanTarget.WATCHOS_ARM32 -> "armv7k-apple-watchos"
-            KonanTarget.WATCHOS_ARM64 -> "arm64_32-apple-watchos"
-            KonanTarget.WATCHOS_DEVICE_ARM64 -> "arm64-apple-watchos"
-            KonanTarget.WATCHOS_X64 -> "x86_64-apple-watchos-simulator"
-            KonanTarget.WATCHOS_SIMULATOR_ARM64 -> "arm64-apple-watchos-simulator"
-            KonanTarget.WATCHOS_X86 -> "i386-apple-watchos-simulator"
-            KonanTarget.TVOS_ARM64 -> "arm64-apple-tvos"
-            KonanTarget.TVOS_X64 -> "x86_64-apple-tvos-simulator"
-            KonanTarget.TVOS_SIMULATOR_ARM64 -> "arm64-apple-tvos-simulator"
-            KonanTarget.MACOS_X64 -> "x86_64-apple-macos"
-            KonanTarget.MACOS_ARM64 -> "arm64-apple-macos"
-            else -> error("Unsupported target: ${target.name}")
+        val target = when (konanTarget) {
+            is KonanTarget.IOS_ARM64 -> "arm64-apple-ios"
+            is KonanTarget.IOS_ARM32 -> "armv7-apple-ios"
+            is KonanTarget.IOS_SIMULATOR_ARM64 -> "arm64-apple-ios-simulator"
+            is KonanTarget.IOS_X64 -> "x86_64-apple-ios-simulator"
+            is KonanTarget.WATCHOS_ARM32 -> "armv7k-apple-watchos"
+            is KonanTarget.WATCHOS_ARM64 -> "arm64_32-apple-watchos"
+            is KonanTarget.WATCHOS_DEVICE_ARM64 -> "arm64-apple-watchos"
+            is KonanTarget.WATCHOS_X64 -> "x86_64-apple-watchos-simulator"
+            is KonanTarget.WATCHOS_SIMULATOR_ARM64 -> "arm64-apple-watchos-simulator"
+            is KonanTarget.WATCHOS_X86 -> "i386-apple-watchos-simulator"
+            is KonanTarget.TVOS_ARM64 -> "arm64-apple-tvos"
+            is KonanTarget.TVOS_X64 -> "x86_64-apple-tvos-simulator"
+            is KonanTarget.TVOS_SIMULATOR_ARM64 -> "arm64-apple-tvos-simulator"
+            is KonanTarget.MACOS_X64 -> "x86_64-apple-macos"
+            is KonanTarget.MACOS_ARM64 -> "arm64-apple-macos"
+            else -> error("Unsupported target: ${konanTarget.name}")
         }
         execOperations.exec { exec ->
             exec.executable = "/usr/bin/xcrun"
