@@ -10,9 +10,9 @@ internal abstract class ExtractObjCSymbolGraphTask @Inject constructor(
 ): ExtractSymbolGraphTask(framework, "objc") {
 
     internal companion object {
-        val Framework.extractObjSymbolGraphTask: TaskProvider<ExtractObjCSymbolGraphTask>
+        val Framework.extractObjcSymbolGraphTask: TaskProvider<ExtractObjCSymbolGraphTask>
             get() = project.tasks.locateOrRegister(
-                "extractObjSymbolGraph${taskSuffix}",
+                "extractObjcSymbolGraph${taskSuffix}",
                 ExtractObjCSymbolGraphTask::class.java,
                 this
             )

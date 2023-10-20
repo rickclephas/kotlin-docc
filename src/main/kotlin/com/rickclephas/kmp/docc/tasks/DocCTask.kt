@@ -2,7 +2,7 @@ package com.rickclephas.kmp.docc.tasks
 
 import com.rickclephas.kmp.docc.tasks.internal.*
 import com.rickclephas.kmp.docc.tasks.internal.CreateDocCSourceBundleTask.Companion.createDoccSourceBundleTask
-import com.rickclephas.kmp.docc.tasks.internal.ExtractObjCSymbolGraphTask.Companion.extractObjSymbolGraphTask
+import com.rickclephas.kmp.docc.tasks.internal.ExtractObjCSymbolGraphTask.Companion.extractObjcSymbolGraphTask
 import com.rickclephas.kmp.docc.tasks.internal.ExtractSwiftSymbolGraphTask.Companion.extractSwiftSymbolGraph
 import com.rickclephas.kmp.docc.tasks.internal.baseNameProvider
 import org.gradle.api.DefaultTask
@@ -31,7 +31,7 @@ public abstract class DocCTask(
     init {
         onlyIf { HostManager.hostIsMac }
         group = JavaBasePlugin.DOCUMENTATION_GROUP
-        dependsOn(framework.extractObjSymbolGraphTask)
+        dependsOn(framework.extractObjcSymbolGraphTask)
         dependsOn(framework.extractSwiftSymbolGraph)
     }
 
