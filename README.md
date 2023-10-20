@@ -33,6 +33,11 @@ kotlin {
                     displayName.set("MyFramework")
                     bundleIdentifier.set("com.example.MyFramework")
                     bundleVersion.set("1.0")
+
+                    // Use a custom Swift-DocC-Render template,
+                    // by default the Kotlin-DocC-Render template is used.
+                    // Setting this to `null` wil use the built-in Xcode template.
+                    renderDir.set(null as Directory?)
                     
                     // Adds additional arguments to the docc command
                     additionalArgs.add("--warnings-as-errors")
