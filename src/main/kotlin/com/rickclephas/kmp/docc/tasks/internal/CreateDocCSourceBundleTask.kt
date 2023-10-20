@@ -21,11 +21,11 @@ internal abstract class CreateDocCSourceBundleTask @Inject constructor(
 ): DefaultTask() {
 
     internal companion object {
-        fun locateOrRegister(target: KotlinNativeTarget): TaskProvider<CreateDocCSourceBundleTask> =
-            target.project.tasks.locateOrRegister(
-                "createDoccSourceBundle${target.taskSuffix}",
+        val KotlinNativeTarget.createDoccSourceBundleTask: TaskProvider<CreateDocCSourceBundleTask>
+            get() = project.tasks.locateOrRegister(
+                "createDoccSourceBundle${taskSuffix}",
                 CreateDocCSourceBundleTask::class.java,
-                target
+                this
             )
     }
 

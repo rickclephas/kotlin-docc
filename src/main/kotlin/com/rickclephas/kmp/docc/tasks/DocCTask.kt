@@ -1,9 +1,9 @@
 package com.rickclephas.kmp.docc.tasks
 
 import com.rickclephas.kmp.docc.tasks.internal.*
-import com.rickclephas.kmp.docc.tasks.internal.CreateDocCSourceBundleTask
-import com.rickclephas.kmp.docc.tasks.internal.ExtractObjCSymbolGraphTask
-import com.rickclephas.kmp.docc.tasks.internal.ExtractSwiftSymbolGraphTask
+import com.rickclephas.kmp.docc.tasks.internal.CreateDocCSourceBundleTask.Companion.createDoccSourceBundleTask
+import com.rickclephas.kmp.docc.tasks.internal.ExtractObjCSymbolGraphTask.Companion.extractObjSymbolGraphTask
+import com.rickclephas.kmp.docc.tasks.internal.ExtractSwiftSymbolGraphTask.Companion.extractSwiftSymbolGraph
 import com.rickclephas.kmp.docc.tasks.internal.baseNameProvider
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.Directory
@@ -30,9 +30,9 @@ public abstract class DocCTask(
     init {
         onlyIf { HostManager.hostIsMac }
         group = JavaBasePlugin.DOCUMENTATION_GROUP
-        dependsOn(CreateDocCSourceBundleTask.locateOrRegister(framework.target))
-        dependsOn(ExtractObjCSymbolGraphTask.locateOrRegister(framework))
-        dependsOn(ExtractSwiftSymbolGraphTask.locateOrRegister(framework))
+        dependsOn(framework.target.createDoccSourceBundleTask)
+        dependsOn(framework.extractObjSymbolGraphTask)
+        dependsOn(framework.extractSwiftSymbolGraph)
     }
 
     @get:Inject

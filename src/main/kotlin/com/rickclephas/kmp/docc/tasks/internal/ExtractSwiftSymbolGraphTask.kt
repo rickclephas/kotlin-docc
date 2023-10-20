@@ -11,11 +11,11 @@ internal abstract class ExtractSwiftSymbolGraphTask @Inject constructor(
 ): ExtractSymbolGraphTask(framework, "swift") {
 
     internal companion object {
-        fun locateOrRegister(framework: Framework): TaskProvider<ExtractSwiftSymbolGraphTask> =
-            framework.project.tasks.locateOrRegister(
-                "extractSwiftSymbolGraph${framework.taskSuffix}",
+        val Framework.extractSwiftSymbolGraph: TaskProvider<ExtractSwiftSymbolGraphTask>
+            get() = project.tasks.locateOrRegister(
+                "extractSwiftSymbolGraph${taskSuffix}",
                 ExtractSwiftSymbolGraphTask::class.java,
-                framework
+                this
             )
     }
 

@@ -1,7 +1,7 @@
 package com.rickclephas.kmp.docc
 
-import com.rickclephas.kmp.docc.tasks.DocCConvertTask
-import com.rickclephas.kmp.docc.tasks.DocCPreviewTask
+import com.rickclephas.kmp.docc.tasks.DocCConvertTask.Companion.doccConvertTask
+import com.rickclephas.kmp.docc.tasks.DocCPreviewTask.Companion.doccPreviewTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -23,8 +23,8 @@ public class KotlinDocCPlugin: Plugin<Project> {
                     kotlinOptions.freeCompilerArgs += "-Xexport-kdoc"
                 }
                 kotlinNativeTarget.binaries.withType(Framework::class.java).configureEach { framework ->
-                    DocCConvertTask.locateOrRegister(framework)
-                    DocCPreviewTask.locateOrRegister(framework)
+                    framework.doccConvertTask
+                    framework.doccPreviewTask
                 }
             }
         }

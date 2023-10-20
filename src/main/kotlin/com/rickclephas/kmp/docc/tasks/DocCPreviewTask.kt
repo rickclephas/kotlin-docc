@@ -14,11 +14,11 @@ public abstract class DocCPreviewTask @Inject constructor(
 ): DocCTask(framework, "preview") {
 
     internal companion object {
-        fun locateOrRegister(framework: Framework): TaskProvider<DocCPreviewTask> =
-            framework.project.tasks.locateOrRegister(
-                "doccPreview${framework.taskSuffix}",
+        val Framework.doccPreviewTask: TaskProvider<DocCPreviewTask>
+            get() = project.tasks.locateOrRegister(
+                "doccPreview${taskSuffix}",
                 DocCPreviewTask::class.java,
-                framework
+                this
             )
     }
 

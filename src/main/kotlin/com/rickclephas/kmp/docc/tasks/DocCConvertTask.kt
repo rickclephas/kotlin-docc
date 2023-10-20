@@ -13,11 +13,11 @@ public abstract class DocCConvertTask @Inject constructor(
 ): DocCTask(framework, "convert") {
 
     internal companion object {
-        fun locateOrRegister(framework: Framework): TaskProvider<DocCConvertTask> =
-            framework.project.tasks.locateOrRegister(
-                "doccConvert${framework.taskSuffix}",
+        val Framework.doccConvertTask: TaskProvider<DocCConvertTask>
+            get() = project.tasks.locateOrRegister(
+                "doccConvert${taskSuffix}",
                 DocCConvertTask::class.java,
-                framework
+                this
             )
     }
 
