@@ -1,5 +1,6 @@
 package com.rickclephas.kmp.docc.tasks
 
+import com.rickclephas.kmp.docc.tasks.DownloadDocCRenderTask.Companion.downloadDoccRenderTask
 import com.rickclephas.kmp.docc.tasks.internal.*
 import com.rickclephas.kmp.docc.tasks.internal.CreateDocCSourceBundleTask.Companion.createDoccSourceBundleTask
 import com.rickclephas.kmp.docc.tasks.internal.ExtractObjCSymbolGraphTask.Companion.extractObjcSymbolGraphTask
@@ -61,6 +62,15 @@ public abstract class DocCTask(
     public val symbolGraphDir: Provider<Directory> = framework.symbolGraphDir
 
     /**
+     * The directory containing the Swift-DocC-Render distribution, or `null` to use the Xcode default.
+     */
+    @get:Optional
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.ABSOLUTE)
+    public val renderDir: DirectoryProperty = project.objects.directoryProperty()
+        .value(project.downloadDoccRenderTask.flatMap { it.outputDirectory })
+
+    /**
      * The `.doccarchive` directory.
      */
     @get:OutputDirectory
@@ -98,6 +108,9 @@ public abstract class DocCTask(
     @TaskAction
     public open fun exec() {
         execOperations.exec {
+            renderDir.orNull?.let { renderDir ->
+                it.environment("DOCC_HTML_DIR", renderDir.asFile.absolutePath)
+            }
             it.executable = "/usr/bin/xcrun"
             it.args("docc", subcommand,
                 "--additional-symbol-graph-dir", symbolGraphDir.get().asFile.absolutePath,
