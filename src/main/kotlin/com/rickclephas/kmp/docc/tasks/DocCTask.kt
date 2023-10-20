@@ -7,6 +7,7 @@ import com.rickclephas.kmp.docc.tasks.internal.ExtractSwiftSymbolGraphTask.Compa
 import com.rickclephas.kmp.docc.tasks.internal.baseNameProvider
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.Directory
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
@@ -30,7 +31,6 @@ public abstract class DocCTask(
     init {
         onlyIf { HostManager.hostIsMac }
         group = JavaBasePlugin.DOCUMENTATION_GROUP
-        dependsOn(framework.target.createDoccSourceBundleTask)
         dependsOn(framework.extractObjSymbolGraphTask)
         dependsOn(framework.extractSwiftSymbolGraph)
     }
@@ -48,16 +48,24 @@ public abstract class DocCTask(
     @get:Input
     public val baseName: Provider<String> = framework.baseNameProvider
 
+    /**
+     * The `.docc` source bundle used to build the `.doccarchive`.
+     */
     @get:InputDirectory
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
-    public val sourceBundle: Provider<Directory> = framework.target.sourceBundleDir
+    public val sourceBundle: DirectoryProperty = project.objects.directoryProperty()
+        .convention(framework.target.createDoccSourceBundleTask.flatMap { it.outputDirectory })
 
     @get:InputDirectory
     @get:PathSensitive(PathSensitivity.ABSOLUTE)
     public val symbolGraphDir: Provider<Directory> = framework.symbolGraphDir
 
+    /**
+     * The `.doccarchive` directory.
+     */
     @get:OutputDirectory
-    public val outputDirectory: Provider<Directory> = framework.doccArchiveDir
+    public val outputDirectory: DirectoryProperty = project.objects.directoryProperty()
+        .convention(framework.doccArchiveDir)
 
     /**
      * The display name passed to `--fallback-display-name`, defaults to the `baseName`.

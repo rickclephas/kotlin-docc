@@ -1,11 +1,10 @@
 package com.rickclephas.kmp.docc.tasks.internal
 
 import org.gradle.api.DefaultTask
-import org.gradle.api.file.Directory
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.file.FileSystemOperations
 import org.gradle.api.file.FileTree
-import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
@@ -39,7 +38,8 @@ internal abstract class CreateDocCSourceBundleTask @Inject constructor(
     abstract val fileSystemOperations: FileSystemOperations
 
     @get:OutputDirectory
-    val outputDirectory: Provider<Directory> = target.sourceBundleDir
+    val outputDirectory: DirectoryProperty = project.objects.directoryProperty()
+        .convention(target.sourceBundleDir)
 
     init {
         onlyIf { HostManager.hostIsMac }
